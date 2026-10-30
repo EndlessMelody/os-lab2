@@ -56,6 +56,7 @@ def test_pipelines():
 @test(10, "TV1 exit statuses and elapsed xv6 ticks")
 def test_status_and_ticks():
     subprocess.run(['make', '-s', 'user/_tv1check'], check=True)
+    maybe_unlink('fs.img')
     r.run_qemu(shell_script(['tv1check']),
                make_args=['UEXTRA=user/xargstest.sh user/_tv1check'])
     r.match(r'^sleep 10: \d+ ticks elapsed$', '^TV1_STATUS_OK$',
