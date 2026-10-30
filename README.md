@@ -5,6 +5,7 @@ Lab 2 starts from the completed [Lab 1 repository](https://github.com/EndlessMel
 - [Original assignment](Lab2_OS_System_Call.docx)
 - [Assignment text](docs/lab02/requirements.txt), extracted from the DOCX for easy reading
 - [Lab 2 task checklist](Task.md)
+- [Phân công nhóm](Lab2_PhanCong_SystemCalls.html) và [quy ước branch, syscall ID, giao diện](docs/lab02/TEAM.md)
 - [Historical Lab 1 plan](docs/lab01/Task.md) and [verification notes](docs/lab01/README.md)
 
 ## Build and run
@@ -30,19 +31,18 @@ make check-lab01
 
 ## Git workflow
 
-`main` is the integration branch. Create a branch for each feature, for example:
+`main` is the integration branch. The member branches are `lab2-trace` (Đăng Khoa), `lab2-sysinfo` (Bảo Trân), and `lab2-ptree` (Nhựt Duy). Switch to your assigned branch, for example:
 
 ```sh
-git switch main
+git switch lab2-trace
 git pull --ff-only
-git switch -c lab2-trace
 # Implement and test the feature.
 git add <changed-files>
 git commit -m "Implement syscall tracing"
 git push -u origin lab2-trace
 ```
 
-Use `lab2-sysinfo` and `lab2-ptree` for the other features. Open pull requests into `main`. All three features touch syscall registration and user stubs, so coordinate changes to `kernel/syscall.h`, `kernel/syscall.c`, `kernel/sysproc.c`, `user/user.h`, `user/usys.pl`, and `Makefile`. Agree on distinct syscall numbers before implementation.
+Open pull requests into `main`. All three features touch syscall registration and user stubs, so coordinate changes to `kernel/syscall.c`, `kernel/sysproc.c`, `user/user.h`, `user/usys.pl`, and `Makefile`. The shared syscall numbers are reserved in `kernel/syscall.h`: trace 22, sysinfo 23, ptree 24. See [TEAM.md](docs/lab02/TEAM.md) for interfaces and review assignments.
 
 The `lab2-base` tag records the prepared starting point. To inspect only subsequent Lab 2 work:
 

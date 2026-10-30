@@ -20,3 +20,8 @@
 #define SYS_link   19
 #define SYS_mkdir  20
 #define SYS_close  21
+
+// Lab 2 IDs shared by all member branches; handlers are added by each owner.
+#define SYS_trace   22
+#define SYS_sysinfo 23
+#define SYS_ptree   24

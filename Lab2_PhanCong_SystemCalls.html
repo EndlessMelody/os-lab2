@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="Bảng phân công triển khai OS Lab 2: trace, sysinfo và ptree; self-test, cross-review, deadline 02/11/2026.">
+  <title>OS Lab 02 | Phân công System Calls</title>
+  <style>
+    :root{
+      --bg:#f4f6fb;--paper:#fff;--ink:#19233b;--muted:#68738a;--line:#e5eaf2;
+      --blue:#4162d6;--blue-soft:#eaf0ff;--violet:#8556cb;--violet-soft:#f3edff;
+      --mint:#158977;--mint-soft:#e6f7f1;--amber:#ba7925;--amber-soft:#fff3df;
+      --shadow:0 12px 36px rgba(25,42,82,.055);--radius:22px;
+    }
+    *,*::before,*::after{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,"Segoe UI",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;font-size:14px;line-height:1.55}
+    button,input{font:inherit}a{color:inherit;text-decoration:none}
+    button{cursor:pointer}
+    button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #88a4ff;outline-offset:3px}
+    .shell{max-width:1220px;margin:0 auto;padding:0 30px}
+    .topbar{background:#ffffffdb;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20;backdrop-filter:blur(14px)}
+    .top-inner{min-height:70px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+    .brand{display:flex;align-items:center;gap:12px;font-size:13px;font-weight:850;letter-spacing:.08em}
+    .brand-mark{width:36px;height:36px;border-radius:12px;background:var(--ink);color:#fff;display:grid;place-items:center;font-weight:800;letter-spacing:-.09em;font-size:16px}
+    .brand small{display:block;font-size:10px;font-weight:650;letter-spacing:.14em;color:var(--muted)}
+    .top-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .toplink{color:var(--muted);padding:8px 10px;font-size:12px;font-weight:700}
+    .toplink:hover{color:var(--blue)}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);border-radius:11px;background:white;color:var(--ink);font-size:12px;font-weight:800;padding:10px 14px;transition:.15s}
+    .btn:hover{background:#f0f3fb;transform:translateY(-1px)}
+    .btn-primary{background:var(--ink);border-color:var(--ink);color:white}
+    .btn-primary:hover{background:#303e59}
+    .hero{padding:44px 0 29px;display:grid;grid-template-columns:1.6fr .86fr;gap:26px;align-items:stretch}
+    .hero-main{padding:12px 0 0}
+    .eyebrow{font-size:11px;color:var(--blue);font-weight:850;letter-spacing:.19em;text-transform:uppercase;margin-bottom:12px}
+    h1{font-size:clamp(33px,4.5vw,55px);line-height:1.13;letter-spacing:-.055em;margin:0 0 16px;font-weight:850}
+    .gradient-text{background:linear-gradient(100deg,#4968d9,#7a54cb);background-clip:text;-webkit-background-clip:text;color:transparent}
+    .hero-desc{font-size:15px;color:var(--muted);max-width:635px;margin:0 0 23px}
+    .pills{display:flex;flex-wrap:wrap;gap:9px}
+    .pill{border-radius:100px;border:1px solid #dfe6f2;background:#fff;color:#58667e;padding:7px 12px;font-size:11px;font-weight:750}
+    .pill.dot::before{content:"";display:inline-block;width:7px;height:7px;background:#20a483;border-radius:100%;margin-right:7px}
+    .deadline{background:linear-gradient(145deg,#1d2a48,#293a61);color:white;border-radius:24px;padding:29px;position:relative;overflow:hidden;box-shadow:0 16px 34px rgba(29,42,72,.15)}
+    .deadline::after{content:"";position:absolute;width:230px;height:230px;border:1px solid #ffffff1c;border-radius:100%;right:-105px;top:-95px;box-shadow:0 0 0 44px #ffffff08,0 0 0 88px #ffffff05;pointer-events:none}
+    .deadline .label{color:#a9b8de;font-size:11px;letter-spacing:.15em;text-transform:uppercase;font-weight:800}
+    .deadline .day{font-size:54px;line-height:1.08;font-weight:880;letter-spacing:-.055em;margin:10px 0 3px;white-space:nowrap}
+    .deadline .time{color:#d1dcf8;font-weight:600;font-size:13px}
+    .deadline .divider{height:1px;background:#ffffff29;margin:24px 0 18px}
+    .deadline .remaining{font-size:12px;color:#b3c7ff;font-weight:800}
+    .deadline .remaining strong{display:block;color:white;font-size:18px;margin-top:3px;letter-spacing:-.02em}
+    .section{padding:19px 0 15px}
+    .section-heading{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:0 0 17px}
+    .section-heading h2{font-size:23px;letter-spacing:-.035em;margin:0 0 3px}
+    .section-heading p{color:var(--muted);margin:0;font-size:12px}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
+    .stat{background:white;border:1px solid var(--line);border-radius:17px;padding:18px 20px;box-shadow:var(--shadow)}
+    .stat .stat-label{font-size:11px;color:var(--muted);font-weight:700}
+    .stat .stat-value{font-size:28px;line-height:1.2;letter-spacing:-.05em;font-weight:850;margin-top:7px}
+    .stat .stat-meta{font-size:11px;color:var(--muted);margin-top:4px}
+    .stat.primary{background:var(--blue-soft);border-color:#d9e3ff}
+    .stat.primary .stat-value{color:var(--blue)}
+    .overall-progress{margin-top:13px;height:7px;background:#dce5ff;border-radius:8px;overflow:hidden}
+    .overall-progress > div{height:100%;width:0%;background:var(--blue);border-radius:8px;transition:width .25s}
+    .assignments{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}
+    .member-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;min-width:0}
+    .card-head{padding:23px 23px 20px;position:relative}
+    .card-head::before{content:"";height:4px;background:var(--accent);position:absolute;left:0;right:0;top:0}
+    .card-kicker{display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--muted);font-weight:850;letter-spacing:.12em}
+    .rank{background:var(--soft);color:var(--accent);padding:5px 10px;border-radius:30px;letter-spacing:0}
+    .member-profile{display:flex;align-items:center;gap:12px;margin:19px 0 15px}
+    .avatar{width:52px;height:52px;display:grid;place-items:center;font-size:19px;font-weight:850;flex-shrink:0;background:var(--soft);color:var(--accent);border-radius:16px}
+    .member-name{font-size:18px;font-weight:850;letter-spacing:-.035em;margin:0}
+    .member-role{color:var(--muted);font-size:11px;margin-top:2px}
+    .sysname{font-size:29px;font-weight:850;letter-spacing:-.04em;color:var(--accent);margin:0 0 5px}
+    .sysdesc{font-size:12px;color:var(--muted);margin:0;min-height:57px}
+    .tasks{padding:18px 23px 21px;border-top:1px solid var(--line);flex:1}
+    .tasks-top{display:flex;justify-content:space-between;align-items:center;margin:0 0 12px}
+    .tasks-top strong{font-size:12px}
+    .tasks-top span{color:var(--accent);font-size:11px;font-weight:800}
+    .task-list{list-style:none;margin:0;padding:0;display:grid;gap:11px}
+    .task-list li{margin:0;padding:0}
+    .task{display:grid;grid-template-columns:19px 1fr;gap:10px;align-items:start;cursor:pointer;color:#37435a;font-size:12px;line-height:1.47}
+    .task input{appearance:none;width:17px;height:17px;border:1.5px solid #b9c5d7;border-radius:5px;margin:1px 0 0;display:grid;place-content:center;cursor:pointer;background:white;transition:.15s}
+    .task input:checked{background:var(--accent);border-color:var(--accent)}
+    .task input:checked::after{content:"";width:8px;height:4px;border-left:2px solid white;border-bottom:2px solid white;transform:rotate(-45deg) translate(1px,-1px)}
+    .task input:checked + span{color:#8995aa;text-decoration:line-through;text-decoration-thickness:1px}
+    .task strong{font-weight:800}
+    .card-foot{padding:16px 23px 21px;background:#fbfcff;border-top:1px solid var(--line)}
+    .bar{height:6px;background:#e9edf5;border-radius:8px;overflow:hidden;margin-bottom:10px}
+    .bar > div{height:100%;background:var(--accent);border-radius:8px;width:0%;transition:width .25s}
+    .footrow{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:11px}
+    .footrow span{color:var(--muted)}.footrow b{color:var(--accent)}
+    .trace{--accent:var(--violet);--soft:var(--violet-soft)}
+    .sysinfo{--accent:var(--mint);--soft:var(--mint-soft)}
+    .ptree{--accent:var(--amber);--soft:var(--amber-soft)}
+    .grid-two{display:grid;grid-template-columns:1.25fr 1fr;gap:17px}
+    .panel{background:white;border:1px solid var(--line);border-radius:var(--radius);padding:24px 25px;box-shadow:var(--shadow)}
+    .panel h3{margin:0 0 7px;font-size:17px;letter-spacing:-.025em}
+    .panel .intro{color:var(--muted);font-size:12px;margin:0 0 21px}
+    .timeline{list-style:none;margin:0;padding:0;display:grid;gap:0}
+    .timeline-item{display:grid;grid-template-columns:82px 22px 1fr;gap:12px;min-height:88px}
+    .date{font-size:12px;font-weight:850;padding-top:0;line-height:1.4;white-space:nowrap}
+    .date small{display:block;color:var(--muted);font-size:10px;font-weight:600;margin-top:3px}
+    .timeline-track{position:relative;display:flex;justify-content:center}
+    .timeline-track:before{content:"";position:absolute;left:10px;top:10px;bottom:-2px;width:2px;background:#dce4f3}
+    .timeline-item:last-child .timeline-track::before{display:none}
+    .timeline-dot{width:13px;height:13px;border:3px solid var(--blue);border-radius:100px;background:white;z-index:1;margin-top:2px}
+    .timeline-item:last-child .timeline-dot{background:var(--blue)}
+    .timeline-content strong{display:block;font-size:12px;margin:-2px 0 5px}
+    .timeline-content p{margin:0;color:var(--muted);font-size:12px}
+    .review-flow{display:flex;flex-direction:column;gap:12px}
+    .review-row{display:grid;grid-template-columns:1fr 24px 1fr;align-items:center;gap:9px;padding:12px;border:1px solid var(--line);border-radius:13px;background:#fbfcff}
+    .review-person{display:flex;align-items:center;gap:8px;min-width:0;font-size:11px;font-weight:750}
+    .review-bubble{width:29px;height:29px;border-radius:9px;display:grid;place-items:center;background:var(--soft);color:var(--accent);font-weight:850;flex:none}
+    .review-arrow{text-align:center;color:#94a1bc;font-size:21px;font-weight:500}
+    .review-footer{margin-top:15px;padding:12px 14px;border-radius:12px;background:var(--blue-soft);color:#36508f;font-size:11px;line-height:1.6}
+    .review-checks{display:grid;gap:10px;margin-top:17px}
+    .review-checks .task{font-size:11px}
+    .review-checks .task input:checked{background:var(--blue);border-color:var(--blue)}
+    .handoff{display:grid;grid-template-columns:1.1fr 1fr;gap:17px}
+    .checklines{list-style:none;margin:13px 0 0;padding:0;display:grid;gap:9px}
+    .checklines li{display:flex;align-items:flex-start;gap:10px;font-size:12px;color:#45516a}
+    .checklines li::before{content:"✓";color:var(--mint);font-weight:900}
+    .code-files{display:flex;gap:7px;flex-wrap:wrap;margin-top:13px}
+    code{background:#eef2f9;padding:5px 8px;border-radius:6px;color:#4b5c82;font:600 11px ui-monospace,SFMono-Regular,Consolas,monospace}
+    .note{background:#fff9eb;border:1px solid #f0e2c2;border-radius:13px;padding:13px 15px;color:#8d672f;font-size:11px;line-height:1.65;margin-top:16px}
+    .bottom{border-top:1px solid var(--line);margin-top:33px;padding:25px 0 35px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;color:var(--muted);font-size:11px}
+    .bottom strong{color:var(--ink)}
+    .mute{color:var(--muted);font-size:11px}
+    .scope{border:1px solid #dce9e4;background:#f1faf6;border-radius:13px;padding:13px 16px;color:#277764;font-size:12px;font-weight:750}
+    @media(max-width:1020px){.assignments{grid-template-columns:repeat(2,minmax(0,1fr))}.member-card:last-child{grid-column:1/-1}.grid-two,.handoff{grid-template-columns:1fr}.hero{grid-template-columns:1.4fr 1fr}.stats{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:680px){.shell{padding:0 17px}.top-inner{min-height:63px}.toplink{display:none}.brand{font-size:12px}.hero{grid-template-columns:1fr;padding-top:27px;gap:18px}.hero-main{padding:0}.deadline{padding:21px}.deadline .day{font-size:42px}.stats{grid-template-columns:repeat(2,1fr);gap:9px}.stat{padding:14px}.stat .stat-value{font-size:24px}.assignments{grid-template-columns:1fr}.member-card:last-child{grid-column:auto}.card-head,.tasks{padding-left:18px;padding-right:18px}.card-foot{padding-left:18px;padding-right:18px}.section-heading h2{font-size:21px}.panel{padding:20px 18px}.timeline-item{grid-template-columns:70px 17px 1fr;gap:8px;min-height:100px}.timeline-track::before{left:7px!important}.review-row{grid-template-columns:1fr 15px 1fr;padding:9px;gap:5px}.review-person{font-size:10px}.review-bubble{width:25px;height:25px}.btn{padding:9px 11px}}
+    @media print{
+      @page{size:A4;margin:11mm}
+      body{background:white;color:black;font-size:11px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+      .shell{max-width:none;padding:0}.topbar,.btn,#resetProgress,.bottom .mute{display:none!important}
+      .hero{padding:10px 0 16px;grid-template-columns:1.5fr .8fr}.hero h1{font-size:32px}.hero-desc{font-size:12px}
+      .deadline{padding:15px;box-shadow:none}.deadline .day{font-size:34px}.deadline .divider{margin:10px 0}
+      .section{padding:8px 0}.stats{gap:7px}.stat{padding:10px;box-shadow:none}.stat .stat-value{font-size:21px}
+      .assignments{grid-template-columns:repeat(3,1fr);gap:8px}.member-card:last-child{grid-column:auto}.member-card{box-shadow:none;border-radius:12px;break-inside:avoid}.card-head{padding:12px}.member-profile{margin:12px 0 8px}.avatar{width:32px;height:32px;font-size:12px}.member-name{font-size:14px}.sysname{font-size:22px}.sysdesc{min-height:0;font-size:10px}.tasks{padding:10px 12px}.task{font-size:10px;gap:5px}.task-list{gap:7px}.card-foot{padding:10px 12px}.grid-two{grid-template-columns:1.2fr 1fr;gap:9px}.handoff{grid-template-columns:1fr 1fr;gap:9px}.panel{padding:13px;box-shadow:none;break-inside:avoid}.panel h3{font-size:14px}.section-heading{margin-bottom:9px}.section-heading h2{font-size:16px}.timeline-item{min-height:61px}.review-row{padding:7px}.review-checks{margin-top:9px}.bottom{margin-top:13px;padding:10px 0}
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell top-inner">
+      <a class="brand" href="#top" aria-label="Về đầu trang"><span class="brand-mark">OS.</span><span>OPERATING SYSTEMS<small>LABORATORY · PROJECT 02</small></span></a>
+      <nav class="top-actions" aria-label="Điều hướng">
+        <a class="toplink" href="#phan-cong">Phân công</a>
+        <a class="toplink" href="#lich-trinh">Lịch trình</a>
+        <a class="toplink" href="#ban-giao">Bàn giao</a>
+        <button class="btn" id="resetProgress" type="button" title="Bỏ toàn bộ dấu tick trên thiết bị này">↺ Đặt lại</button>
+        <button class="btn btn-primary" id="printPage" type="button">⎙ In / PDF</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell" id="top">
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-main">
+        <div class="eyebrow">Team workboard / 30.10 → 02.11.2026</div>
+        <h1 id="page-title">OS Lab 02<span style="color:#aeb8ca">.</span><br><span class="gradient-text">System Calls</span></h1>
+        <p class="hero-desc">Một thành viên, một system call. Kế thừa môi trường xv6 phù hợp từ Lab 1, tập trung <strong>implementation, self-test, cross-review</strong> và tích hợp. Báo cáo để giai đoạn sau.</p>
+        <div class="pills"><span class="pill dot">Đang triển khai</span><span class="pill">xv6 · Linux</span><span class="pill">03 thành viên</span><span class="pill">Không làm báo cáo đợt này</span></div>
+      </div>
+      <aside class="deadline" aria-label="Hạn hoàn thành">
+        <div class="label">Hạn hoàn thành chung</div>
+        <div class="day">02 / 11</div>
+        <div class="time">Thứ Hai · 23:59 · năm 2026 (GMT+7)</div>
+        <div class="divider"></div>
+        <div class="remaining">ĐẾM NGƯỢC DEADLINE<strong id="countdown" aria-live="polite">Đang tính…</strong></div>
+      </aside>
+    </section>
+
+    <section class="section" aria-label="Tổng quan">
+      <div class="stats">
+        <div class="stat"><div class="stat-label">System calls</div><div class="stat-value">03</div><div class="stat-meta">trace · sysinfo · ptree</div></div>
+        <div class="stat"><div class="stat-label">Thành viên</div><div class="stat-value">03</div><div class="stat-meta">Mỗi người phụ trách 01 syscall</div></div>
+        <div class="stat"><div class="stat-label">Thời gian</div><div class="stat-value">04 <span style="font-size:14px;letter-spacing:0">ngày</span></div><div class="stat-meta">30/10 đến hết 02/11</div></div>
+        <div class="stat primary"><div class="stat-label">Tổng tiến độ checklist</div><div class="stat-value" id="totalProgress">0 / 20</div><div class="overall-progress"><div id="totalBar"></div></div><div class="stat-meta">Tích chọn để theo dõi trên máy này</div></div>
+      </div>
+    </section>
+
+    <section class="section" id="phan-cong" aria-labelledby="assignment-title">
+      <div class="section-heading"><div><h2 id="assignment-title">Phân công theo thành viên</h2><p>Mỗi checklist bao gồm phần code và self-test. Review chéo được theo dõi riêng bên dưới.</p></div><span class="mute">Nhấn vào ô vuông để cập nhật tiến độ</span></div>
+      <div class="assignments">
+        <article class="member-card trace" data-member="trace">
+          <div class="card-head">
+            <div class="card-kicker"><span>THÀNH VIÊN 01</span><span class="rank">LEAD · INTEGRATION</span></div>
+            <div class="member-profile"><div class="avatar">ĐK</div><div><h3 class="member-name">Đăng Khoa</h3><div class="member-role">Syscall owner · Integrator</div></div></div>
+            <div class="sysname">trace()</div>
+            <p class="sysdesc">Bật theo dõi syscall bằng bitmask; log đúng tiến trình, đúng lời gọi và kế thừa khi fork.</p>
+          </div>
+          <div class="tasks">
+            <div class="tasks-top"><strong>Implementation & self-test</strong><span class="card-count">0/5</span></div>
+            <ul class="task-list">
+              <li><label class="task"><input type="checkbox" data-id="trace-1"><span>Đăng ký <strong>SYS_trace</strong>, stub và <strong>sys_trace(mask)</strong>; lưu mask trong <code>proc</code>.</span></label></li>
+              <li><label class="task"><input type="checkbox" data-id="trace-2"><span>In <strong>PID, tên syscall, giá trị trả về</strong> theo mask được bật.</span></label></li>
+              <li><label class="task"><input type="checkbox" data-id="trace-3"><span>Truyền mask sang tiến trình con khi <strong>fork</strong>, không ảnh hưởng tiến trình khác.</span></label></li>
+              <li><label class="task"><input type="checkbox" data-id="trace-4"><span>Hoàn thiện <strong>user/trace.c</strong> và cập nhật <code>UPROGS</code>.</span></label></li>
+              <li><label class="task"><input type="checkbox" data-id="trace-5"><span>Self-test mask đơn, mask toàn bộ, không trace và <strong>forkforkfork</strong>; lưu output.</span></label></li>
+            </ul>
+          </div>
+          <div class="card-foot"><div class="bar"><div class="card-bar"></div></div><div class="footrow"><span>Review được thực hiện bởi <strong>Nhựt Duy</strong></span><b class="card-percent">0%</b></div></div>
+        </article>
+
+        <article class="member-card sysinfo" data-member="sysinfo">
+          <div class="card-head">
+            <div class="card-kicker"><span>THÀNH VIÊN 02</span><span class="rank">KERNEL · MEMORY</span></div>
+            <div class="member-profile"><div class="avatar">BT</div><div><h3 class="member-name">Bảo Trân</h3><div class="member-role">Syscall owner · Reviewer</div></div></div>
+            <div class="sysname">sysinfo()</div>
+            <p class="sysdesc">Trả về dung lượng bộ nhớ còn trống và số lượng tiến trình đang tồn tại trong hệ thống.</p>
+          </div>
+          <div class="tasks">
+            <div class="tasks-top"><strong>Implementation & self-test</strong><span class="card-count">0/5</span></div>
+            <ul class="task-list">
+              <li><label class="task"><input type="checkbox" data-id="sysinfo-1"><span>Đăng ký syscall, stub và khai báo <strong>struct sysinfo</strong>.</span></label></li>
+              <li><label class="task"><input type="checkbox" data-id="sysinfo-2"><span>Cài đặt <strong>freemem</strong> trong <code>kernel/kalloc.c</code> (đơn vị byte).</span></label></li>
+              <li><label class="task"><input type="checkbox" data-id="sysinfo-3"><span>Cài đặt <strong>nproc</strong> trong <code>kernel/proc.c</code> (state ≠ UNUSED).</span></label></li>
+              <li><label class="task"><input type="checkbox" data-id="sysinfo-4"><span>Dùng <strong>copyout()</strong> để chuyển struct sang user space; xử lý con trỏ lỗi.</span></label></li>
+              <li><label class="task"><input type="checkbox" data-id="sysinfo-5"><span>Chạy <strong>sysinfotest: OK</strong> và test đầu vào không hợp lệ; lưu output.</span></label></li>
+            </ul>
+          </div>
+          <div class="card-foot"><div class="bar"><div class="card-bar"></div></div><div class="footrow"><span>Review được thực hiện bởi <strong>Đăng Khoa</strong></span><b class="card-percent">0%</b></div></div>
+        </article>
+
+        <article class="member-card ptree" data-member="ptree">
+          <div class="card-head">
+            <div class="card-kicker"><span>THÀNH VIÊN 03</span><span class="rank">KERNEL · PROCESS</span></div>
+            <div class="member-profile"><div class="avatar">ND</div><div><h3 class="member-name">Nhựt Duy</h3><div class="member-role">Syscall owner · Reviewer</div></div></div>
+            <div class="sysname">ptree()</div>
+            <p class="sysdesc">Trích xuất thông tin tiến trình từ kernel, dựng cây quan hệ cha con tại user space.</p>
+          </div>
+          <div class="tasks">
+            <div class="tasks-top"><strong>Implementation & self-test</strong><span class="card-count">0/5</span></div>
+            <ul class="task-list">
+              <li><label class="task"><input type="checkbox" data-id="ptree-1"><span>Đăng ký syscall <strong>ptree(buf, max)</strong> và định nghĩa <strong>ptreeinfo</strong>.</span></label></li>
+              <li><label class="task"><input type="checkbox" data-id="ptree-2"><span>Duyệt bảng process: <strong>pid, ppid, state, memsize, name</strong>; bỏ UNUSED.</span></label></li>
+              <li><label class="task"><input type="checkbox" data-id="ptree-3"><span><strong>copyout()</strong> tối đa <code>max</code> phần tử; trả số phần tử hoặc <strong>-1</strong> khi lỗi.</span></label></li>
+              <li><label class="task"><input type="checkbox" data-id="ptree-4"><span>Viết <strong>user/pstree.c</strong> để dựng, in cây thụt lề theo <code>ppid</code>.</span></label></li>
+              <li><label class="task"><input type="checkbox" data-id="ptree-5"><span>Self-test cây thực tế, <strong>max ≤ 0</strong>, buffer lỗi, giới hạn max; lưu output.</span></label></li>
+            </ul>
+          </div>
+          <div class="card-foot"><div class="bar"><div class="card-bar"></div></div><div class="footrow"><span>Review được thực hiện bởi <strong>Bảo Trân</strong></span><b class="card-percent">0%</b></div></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="lich-trinh">
+      <div class="section-heading"><div><h2>Timeline & review chéo</h2><p>Lịch gọn trong 4 ngày, ưu tiên chất lượng code và bài test trước khi merge.</p></div></div>
+      <div class="grid-two">
+        <div class="panel">
+          <h3>4 mốc triển khai</h3><p class="intro">Deadline cuối cùng là 23:59 ngày 02/11/2026.</p>
+          <ol class="timeline">
+            <li class="timeline-item"><div class="date">30/10<small>Thứ Sáu</small></div><div class="timeline-track"><div class="timeline-dot"></div></div><div class="timeline-content"><strong>Chuẩn bị / chốt baseline</strong><p>Đối chiếu source Lab 1 với yêu cầu Lab 2, thống nhất syscall IDs, header, tạo ba branch riêng.</p></div></li>
+            <li class="timeline-item"><div class="date">31/10<small>Thứ Bảy</small></div><div class="timeline-track"><div class="timeline-dot"></div></div><div class="timeline-content"><strong>Implementation</strong><p>Hoàn thiện kernel code, user stub, user program; bảo đảm từng branch build được.</p></div></li>
+            <li class="timeline-item"><div class="date">01/11<small>Chủ Nhật</small></div><div class="timeline-track"><div class="timeline-dot"></div></div><div class="timeline-content"><strong>Self-test</strong><p>Chạy test chức năng, edge cases; push code kèm lệnh test, output và lỗi còn tồn tại.</p></div></li>
+            <li class="timeline-item"><div class="date">02/11<small>Thứ Hai</small></div><div class="timeline-track"><div class="timeline-dot"></div></div><div class="timeline-content"><strong>Cross-review → merge → regression test</strong><p>Review chéo, sửa lỗi sau review; Đăng Khoa tích hợp và chạy lại toàn bộ test trước 23:59.</p></div></li>
+          </ol>
+        </div>
+        <div class="panel">
+          <h3>Vòng review chéo</h3><p class="intro">Không ai tự review phần code do mình phụ trách.</p>
+          <div class="review-flow">
+            <div class="review-row"><div class="review-person trace"><span class="review-bubble">ĐK</span> Đăng Khoa</div><div class="review-arrow">→</div><div class="review-person sysinfo"><span class="review-bubble">BT</span> Bảo Trân<br> (sysinfo)</div></div>
+            <div class="review-row"><div class="review-person sysinfo"><span class="review-bubble">BT</span> Bảo Trân</div><div class="review-arrow">→</div><div class="review-person ptree"><span class="review-bubble">ND</span> Nhựt Duy<br> (ptree)</div></div>
+            <div class="review-row"><div class="review-person ptree"><span class="review-bubble">ND</span> Nhựt Duy</div><div class="review-arrow">→</div><div class="review-person trace"><span class="review-bubble">ĐK</span> Đăng Khoa<br> (trace)</div></div>
+          </div>
+          <div class="review-checks" aria-label="Checklist hoàn thành review">
+            <label class="task"><input type="checkbox" data-id="review-1"><span>Đăng Khoa đã review <strong>sysinfo</strong> và phản hồi.</span></label>
+            <label class="task"><input type="checkbox" data-id="review-2"><span>Bảo Trân đã review <strong>ptree</strong> và phản hồi.</span></label>
+            <label class="task"><input type="checkbox" data-id="review-3"><span>Nhựt Duy đã review <strong>trace</strong> và phản hồi.</span></label>
+          </div>
+          <div class="review-footer"><strong>Tiêu chí review:</strong> đúng output, xử lý edge cases, build sạch, không làm hỏng syscall khác, không có conflict còn sót.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="ban-giao">
+      <div class="section-heading"><div><h2>Bàn giao & lưu ý tích hợp</h2><p>Chỉ những đầu ra cần thiết cho mốc 02/11.</p></div></div>
+      <div class="handoff">
+        <div class="panel">
+          <h3>Definition of Done</h3>
+          <ul class="checklines">
+            <li>Code của từng syscall đã push trên branch riêng, có thể build và chạy.</li>
+            <li>Có self-test: câu lệnh, output, kết quả pass/fail và ghi chú lỗi nếu có.</li>
+            <li>Hoàn thành review chéo và sửa các vấn đề được phát hiện.</li>
+            <li>Đã merge ba branch và chạy lại test trên bản tích hợp chung.</li>
+          </ul>
+          <div class="review-checks" aria-label="Checklist tích hợp">
+            <label class="task"><input type="checkbox" data-id="integrate-1"><span><strong>Đăng Khoa:</strong> merge đủ 3 branch, giải quyết conflict.</span></label>
+            <label class="task"><input type="checkbox" data-id="integrate-2"><span><strong>Cả nhóm:</strong> regression test trên baseline đã tích hợp, xác nhận kết quả.</span></label>
+          </div>
+          <div class="scope" style="margin-top:18px">Trong phạm vi: implement · self-test · cross-review · integration.<br>Ngoài phạm vi: báo cáo, đóng gói và nộp Moodle (làm sau).</div>
+        </div>
+        <div class="panel">
+          <h3>Những file dễ phát sinh conflict</h3>
+          <p class="intro">Cả ba người đều thêm syscall, nên cần chốt syscall IDs và quy ước chỉnh file dùng chung trước khi code.</p>
+          <div class="code-files"><code>kernel/syscall.h</code><code>kernel/syscall.c</code><code>kernel/proc.c</code><code>user/user.h</code><code>user/usys.pl</code><code>Makefile</code></div>
+          <div class="note"><strong>Về việc kế thừa Lab 1:</strong> Có thể tái sử dụng môi trường, workflow và phần code tương thích. Tuy nhiên hãy đối chiếu mã nguồn và các file starter của Lab 2 trước khi chọn baseline, tránh thiếu các file test hay thay đổi không cần thiết.</div>
+          <p class="mute" style="margin:16px 0 0"><strong>Nguồn nội dung:</strong> Lab2_OS_System_Call.docx, mục 4 (Trace, Sysinfo, Process Tree). Phân công người, lịch trình và quy trình review là kế hoạch nội bộ nhóm.</p>
+        </div>
+      </div>
+    </section>
+    <footer class="bottom"><div><strong>OS LAB 02</strong> · HCMUS · Team implementation board</div><span class="mute">Tiến độ được lưu riêng trên trình duyệt của người xem, không đồng bộ giữa các thành viên.</span></footer>
+  </main>
+
+  <script>
+    (()=>{
+      'use strict';
+      const KEY='os-lab2-progress-v1';
+      const checkboxes=[...document.querySelectorAll('input[type="checkbox"][data-id]')];
+      const safeRead=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch{return {}}};
+      let saved=safeRead();
+      checkboxes.forEach(el=>{el.checked=!!saved[el.dataset.id];el.addEventListener('change',()=>{saved[el.dataset.id]=el.checked;try{localStorage.setItem(KEY,JSON.stringify(saved))}catch{}updateProgress()})});
+      function updateProgress(){
+        const complete=checkboxes.filter(el=>el.checked).length,total=checkboxes.length;
+        document.getElementById('totalProgress').textContent=`${complete} / ${total}`;
+        document.getElementById('totalBar').style.width=`${complete/total*100}%`;
+        document.querySelectorAll('[data-member]').forEach(card=>{
+          const items=[...card.querySelectorAll('input[data-id]')],done=items.filter(el=>el.checked).length;
+          card.querySelector('.card-count').textContent=`${done}/${items.length}`;
+          card.querySelector('.card-bar').style.width=`${done/items.length*100}%`;
+          card.querySelector('.card-percent').textContent=`${Math.round(done/items.length*100)}%`;
+        });
+      }
+      function updateCountdown(){
+        const end=Date.parse('2026-11-02T23:59:00+07:00');
+        const diff=end-Date.now();let label='';
+        if(diff<=0){label='Đã qua thời hạn';}
+        else{const d=Math.floor(diff/86400000),h=Math.floor(diff%86400000/3600000),m=Math.floor(diff%3600000/60000);label=d>0?`${d} ngày · ${h} giờ · ${m} phút`:`${h} giờ · ${m} phút`;}
+        document.getElementById('countdown').textContent=label;
+      }
+      document.getElementById('printPage').addEventListener('click',()=>window.print());
+      document.getElementById('resetProgress').addEventListener('click',()=>{
+        if(!window.confirm('Đặt lại toàn bộ checklist trên trình duyệt này?'))return;
+        saved={};checkboxes.forEach(el=>el.checked=false);
+        try{localStorage.removeItem(KEY)}catch{}
+        updateProgress();
+      });
+      updateProgress();updateCountdown();setInterval(updateCountdown,60000);
+    })();
+  </script>
+</body>
+</html>
