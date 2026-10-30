@@ -1,0 +1,128 @@
+./grade-lab-util sleep pingpong primes
+make[1]: Entering directory '/home/melody/os-lab2'
+make[1]: 'kernel/kernel' is up to date.
+make[1]: Leaving directory '/home/melody/os-lab2'
+== Test sleep, no arguments == sleep, no arguments: OK
+== Test sleep, returns == sleep, returns: OK (0.7s)
+== Test sleep, makes syscall == sleep, makes syscall: OK (0.9s)
+== Test pingpong == pingpong: OK (1.0s)
+== Test primes == primes: OK (7.6s)
+./grade-tv1
+make[1]: Entering directory '/home/melody/os-lab2'
+make[1]: 'kernel/kernel' is up to date.
+make[1]: Leaving directory '/home/melody/os-lab2'
+== Test TV1 sleep arguments and return to shell == TV1 sleep arguments and return to shell: OK (2.2s)
+== Test TV1 pingpong repeated 50 times == TV1 pingpong repeated 50 times: OK (1.9s)
+== Test TV1 primes exact output, repeated 20 times == TV1 primes exact output, repeated 20 times: OK (19.2s)
+== Test TV1 programs used in shell pipelines == TV1 programs used in shell pipelines: OK (1.4s)
+== Test TV1 exit statuses and elapsed xv6 ticks == TV1 exit statuses and elapsed xv6 ticks: OK
+    (Old xv6.out.tv1.status_and_ticks failure log removed)
+Score: 50/50
+./grade-lab01
+make[1]: Entering directory '/home/melody/os-lab2'
+make[1]: 'kernel/kernel' is up to date.
+make[1]: Leaving directory '/home/melody/os-lab2'
+== Test Lab01 cp contents, overwrite, same inode and errors ==
+PASS: cp empty file
+PASS: cp small file
+PASS: cp binary file larger than buffer (8193 bytes)
+PASS: cp overwrite longer destination
+PASS: cp overwrite with empty file
+PASS: cp reject same path
+PASS: cp reject hard-link alias
+PASS: cp missing source
+PASS: cp reject source directory
+PASS: cp reject destination directory
+PASS: cp destination parent missing
+PASS: cp missing arguments
+PASS: cp extra arguments
+LAB01_CP_OK: 13 cases
+Lab01 cp contents, overwrite, same inode and errors: OK (4.4s)
+== Test Lab01 diff lines, quiet mode, long lines and errors ==
+PASS: diff empty files
+PASS: diff equal multiline files
+PASS: diff changed middle line
+PASS: diff second file ends first
+PASS: diff first file ends first
+PASS: diff empty against multiple lines
+PASS: diff -q before filenames, one message
+PASS: diff -q after filenames, one message
+PASS: diff -q equal files is silent
+PASS: diff equal final lines without newline
+PASS: diff detect missing final newline
+PASS: diff trailing empty line
+PASS: diff full long lines with change after byte 4096
+PASS: diff equal long lines
+PASS: diff equal lines containing NUL
+PASS: diff -q detects change beyond NUL
+PASS: diff missing first file
+PASS: diff missing second file
+PASS: diff reject directory
+PASS: diff missing arguments
+PASS: diff unknown option
+PASS: diff duplicate -q
+PASS: diff extra filename
+LAB01_DIFF_OK: 23 cases
+Lab01 diff lines, quiet mode, long lines and errors: OK (6.9s)
+== Test Lab01 tree depth, filters, paths and errors ==
+PASS: tree missing path gives nonzero status
+PASS: tree full hierarchy and 14-character names
+PASS: tree -L 1
+PASS: tree -L 2
+PASS: tree -L 0
+PASS: tree -d
+PASS: tree -d -L 1 with options before path
+PASS: tree empty directory
+PASS: tree file root
+PASS: tree trailing slash
+PASS: tree default path is current directory
+PASS: tree nonnumeric depth
+PASS: tree negative depth
+PASS: tree overflowing depth
+PASS: tree missing depth argument
+PASS: tree unknown option
+PASS: tree multiple paths
+PASS: tree oversized root path
+PASS: tree joined path exceeds MAXPATH
+PASS: tree deep recursion fails cleanly at FD limit
+PASS: tree depth limit avoids deep traversal
+LAB01_TREE_OK: 21 cases
+Lab01 tree depth, filters, paths and errors: OK (7.2s)
+== Test Lab01 du byte totals, options, paths and errors ==
+PASS: du missing path gives nonzero status
+PASS: du directory totals exclude directory metadata
+PASS: du -a includes every file with exact byte sizes
+PASS: du -s only root total
+PASS: du -a -s gives summary priority
+PASS: du empty directory is zero
+PASS: du file root without -a is silent
+PASS: du -a file root
+PASS: du -s file root
+PASS: du trailing slash
+PASS: du default path is current directory
+PASS: du unknown option
+PASS: du multiple paths
+PASS: du oversized root path
+PASS: du joined path exceeds MAXPATH
+PASS: du -s reports traversal error
+PASS: du deep recursion fails cleanly at FD limit
+LAB01_DU_OK: 17 cases
+Lab01 du byte totals, options, paths and errors: OK (5.5s)
+== Test Lab01 descriptor exhaustion and pipe failure cleanup ==
+PASS: cp no descriptor available for source
+PASS: diff no descriptor available for first file
+PASS: tree no descriptor available for root
+PASS: du no descriptor available for root
+PASS: pingpong first pipe fails without hanging
+PASS: primes first pipe fails without hanging
+PASS: cp no descriptor available for destination
+PASS: diff second open fails cleanly
+PASS: tree child stat fails cleanly
+PASS: du child open fails cleanly
+PASS: pingpong second pipe fails without hanging
+PASS: primes filter pipe failure reaches generator
+LAB01_RESOURCES_OK: 12 cases
+Lab01 descriptor exhaustion and pipe failure cleanup: OK (3.3s)
+== Test Lab01 du full 64-bit size formatting == Lab01 du full 64-bit size formatting: OK (0.9s)
+== Test Lab01 complete seven-program shell workflow == Lab01 complete seven-program shell workflow: OK (1.9s)
+Score: 70/70

@@ -1,16 +1,16 @@
 # Lab 2 — System Call
 
-Source of requirements: [Lab2_OS_System_Call.docx](Lab2_OS_System_Call.docx). This checklist describes planned work; setup does not complete the exercises. The previous Lab 1 plan is preserved in [docs/lab01/Task.md](docs/lab01/Task.md).
+Source of requirements: [Lab2_OS_System_Call.docx](Lab2_OS_System_Call.docx). On `lab2-trace`, trace implementation and self-tests are complete; independent review and integration remain pending. See [trace handoff](docs/lab02/TRACE.md). The previous Lab 1 plan is preserved in [docs/lab01/Task.md](docs/lab01/Task.md).
 
 ## 1. Trace
 
-- [ ] Add `int trace(int mask)` to the user interface, syscall number, stub, and kernel dispatch.
-- [ ] Store a trace mask per process, initialize it for new processes, and copy it on `fork`.
-- [ ] After a selected syscall returns, print PID, syscall name, and return value.
-- [ ] Keep tracing enabled across `exec` and inherited by descendants; other processes must remain unaffected.
-- [ ] Write `user/trace.c` and add `$U/_trace` to `UPROGS`.
-- [ ] Check `trace 32 grep hello README`, `trace 2147483647 grep hello README`, ordinary `grep hello README`, and `trace 2 usertests forkforkfork`.
-- [ ] Test invalid usage, disabling the mask, and process-slot reuse.
+- [x] Add `int trace(int mask)` to the user interface, syscall number, stub, and kernel dispatch.
+- [x] Store a trace mask per process, initialize it for new processes, and copy it on `fork`.
+- [x] After a selected syscall returns, print PID, syscall name, and return value.
+- [x] Keep tracing enabled across `exec` and inherited by descendants; other processes must remain unaffected.
+- [x] Write `user/trace.c` and add `$U/_trace` to `UPROGS`.
+- [x] Check `trace 32 grep hello README`, `trace 2147483647 grep hello README`, ordinary `grep hello README`, and `trace 2 usertests forkforkfork`.
+- [x] Test invalid usage, disabling the mask, and process-slot reuse.
 
 ## 2. Sysinfo
 
@@ -33,9 +33,11 @@ Source of requirements: [Lab2_OS_System_Call.docx](Lab2_OS_System_Call.docx). Th
 
 ## 4. Integration and hand-in
 
-- [ ] Coordinate distinct syscall numbers and shared-file edits across the three features.
+Theo phân công hiện tại, triển khai, self-test, review chéo và tích hợp thuộc đợt này. Các mục báo cáo, đóng gói và nộp MOODLE bên dưới được giữ để làm ở giai đoạn sau.
+
+- [x] Coordinate distinct syscall numbers and shared-file edits across the three features; see `docs/lab02/TEAM.md`.
 - [ ] Build from clean source and verify all three features together in QEMU.
-- [ ] Re-run `make check-lab01` to check inherited utilities.
+- [x] Re-run `make check-lab01` on `lab2-trace` to check inherited utilities; repeat on the final three-feature integration.
 - [ ] Record reproducible test commands, actual results, limitations, and each member's contribution.
 - [ ] Write a concise PDF report named `StudentID1_StudentID2_StudentID3_Report.pdf`.
 - [ ] Generate a patch from the agreed baseline, including all newly committed source files, and verify it applies to that baseline.

@@ -1,0 +1,15 @@
+
+xv6 kernel is booting
+
+hart 1 starting
+hart 2 starting
+init: starting sh
+$ tracecheck masks
+MASK_PID 3
+3: syscall getpid -> 3
+3: syscall getpid -> 3
+3: syscall close -> -1
+3: syscall trace -> 0
+3: syscall getpid -> 3
+TRACE_MASKS_OK
+$ qemu-system-riscv64: terminating on signal 15 from pid 11147 (make)
