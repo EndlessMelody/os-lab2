@@ -1,0 +1,112 @@
+#!/usr/bin/env python3
+"""Run trace self-tests inside xv6 and save the actual QEMU output."""
+
+import re
+import subprocess
+from gradelib import *
+
+r = Runner()
+
+
+def boot(group, commands, helper=False, timeout=45):
+    args = []
+    if helper:
+        subprocess.run(['make', '-s', 'user/_tracecheck'], check=True)
+        args = ['UEXTRA=user/xargstest.sh user/_tracecheck']
+    # Rebuild the filesystem so tests start without files from previous runs.
+    maybe_unlink('fs.img')
+    r.run_qemu(save('docs/lab02/trace-' + group + '.txt'),
+               shell_script(commands), make_args=args, timeout=timeout)
+    r.match(no=['TRACECHECK_FAIL:', 'panic:', r'usertrap\('])
+
+
+def events():
+    return [(int(pid), name, int(value)) for pid, name, value in
+            re.findall(r'(\d+): syscall (\w+) -> (-?\d+)', r.qemu.output)]
+
+
+@test(10, 'Trace selected read mask survives exec')
+def test_read():
+    boot('read', ['trace 32 grep hello README'])
+    actual = events()
+    assert_equal(len(actual) >= 2, True)
+    assert_equal({name for _, name, _ in actual}, {'read'})
+    assert_equal(len({pid for pid, _, _ in actual}), 1)
+    assert_equal(actual[-1][2], 0)
+    assert_equal(sum(value for _, _, value in actual), len(open('README', 'rb').read()))
+
+
+@test(10, 'Trace all mask records names and return values')
+def test_all():
+    boot('all', ['trace 2147483647 grep hello README'])
+    actual = events()
+    assert_equal([name for _, name, _ in actual[:3]], ['trace', 'exec', 'open'])
+    assert_equal([value for _, _, value in actual[:3]], [0, 3, 3])
+    assert_equal(actual[-1][1:], ('close', 0))
+    assert_equal({name for _, name, _ in actual}, {'trace', 'exec', 'open', 'read', 'close'})
+    assert_equal(len({pid for pid, _, _ in actual}), 1)
+
+
+@test(10, 'Trace does not affect following shell commands')
+def test_plain():
+    boot('plain', ['trace 32 grep hello README', 'echo TRACE_PLAIN_BEGIN',
+                   'grep hello README', 'trace 0 grep hello README',
+                   'echo TRACE_PLAIN_OK'])
+    r.match('^TRACE_PLAIN_BEGIN$', '^TRACE_PLAIN_OK$')
+    tail = r.qemu.output.split('TRACE_PLAIN_BEGIN\n', 1)[1]
+    assert_equal('syscall ' in tail, False)
+
+
+@test(10, 'Trace replaces and disables masks, including high bits')
+def test_masks():
+    boot('masks', ['tracecheck masks'], helper=True)
+    r.match('^TRACE_MASKS_OK$')
+    pid = int(re.search(r'^MASK_PID (\d+)$', r.qemu.output, re.M)[1])
+    assert_equal(events(), [(pid, 'getpid', pid), (pid, 'getpid', pid),
+                            (pid, 'close', -1), (pid, 'trace', 0),
+                            (pid, 'getpid', pid)])
+
+
+@test(10, 'Trace inheritance, sibling isolation and process slot reuse')
+def test_inherit():
+    boot('inherit', ['tracecheck inherit'], helper=True)
+    r.match('^TRACE_INHERIT_OK$')
+    parent, sibling = map(int, re.search(r'INHERIT_PARENT (\d+) SIBLING (\d+)',
+                                       r.qemu.output).groups())
+    actual = events()
+    forks = [(pid, result) for pid, name, result in actual if name == 'fork']
+    assert_equal(len(forks), 2)
+    child = next(result for pid, result in forks if pid == parent)
+    grandchild = next(result for pid, result in forks if pid == child)
+    assert_equal(sorted((pid, value) for pid, name, value in actual if name == 'getpid'),
+                 sorted([(child, child), (grandchild, grandchild)]))
+    assert_equal(len(actual), 4)
+    assert_equal(sibling in {pid for pid, _, _ in actual}, False)
+
+
+@test(10, 'Trace CLI validates masks, statuses and argument forwarding')
+def test_cli():
+    boot('cli', ['tracecheck cli'], helper=True)
+    r.match('^TRACE_CLI_OK$', '^TRACE_ARGV first last$', '^TRACE_ZERO_OK$',
+            no=['UNEXPECTED_EXEC'])
+    assert_equal(events(), [])
+    assert_equal(r.qemu.output.count('trace: usage:'), 2)
+    assert_equal(r.qemu.output.count('trace: mask must be an integer'), 7)
+    assert_equal(r.qemu.output.count('trace: exec no-such-command failed'), 1)
+
+
+@test(10, 'Trace MIT forkforkfork follows descendant forks')
+def test_forkforkfork():
+    boot('forkforkfork', ['trace 2 usertests forkforkfork'], timeout=90)
+    r.match('ALL TESTS PASSED', no=['FAILED', 'TRACECHECK_FAIL:'])
+    actual = events()
+    assert_equal(len(actual) > 10, True)
+    assert_equal({name for _, name, _ in actual}, {'fork'})
+    assert_equal(len({pid for pid, _, _ in actual}) > 2, True)
+    children = {value for _, _, value in actual if value > 0}
+    assert_equal(any(pid in children for pid, _, _ in actual), True)
+    # Saturation may legitimately make fork return -1; no other negative value.
+    assert_equal(all(value == -1 or value > 0 for _, _, value in actual), True)
+
+
+run_tests()
