@@ -696,3 +696,19 @@ procdump(void)
     printf("\n");
   }
 }
+// Count all process slots that are currently in use.
+uint64
+getnproc(void)
+{
+  uint64 count = 0;
+  struct proc *p;
+
+  for(p = proc; p < &proc[NPROC]; p++){
+    acquire(&p->lock);
+    if(p->state != UNUSED)
+      count++;
+    release(&p->lock);
+  }
+
+  return count;
+}
