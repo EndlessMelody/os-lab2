@@ -1,0 +1,12 @@
+./grade-lab02-trace
+make[1]: Entering directory '/home/melody/os-lab2'
+make[1]: 'kernel/kernel' is up to date.
+make[1]: Leaving directory '/home/melody/os-lab2'
+== Test Trace selected read mask survives exec == Trace selected read mask survives exec: OK (1.7s)
+== Test Trace all mask records names and return values == Trace all mask records names and return values: OK (0.8s)
+== Test Trace does not affect following shell commands == Trace does not affect following shell commands: OK (1.2s)
+== Test Trace replaces and disables masks, including high bits == Trace replaces and disables masks, including high bits: OK (0.8s)
+== Test Trace inheritance, sibling isolation and process slot reuse == Trace inheritance, sibling isolation and process slot reuse: OK (0.9s)
+== Test Trace CLI validates masks, statuses and argument forwarding == Trace CLI validates masks, statuses and argument forwarding: OK (1.1s)
+== Test Trace MIT forkforkfork follows descendant forks == Trace MIT forkforkfork follows descendant forks: OK (23.5s)
+Score: 70/70

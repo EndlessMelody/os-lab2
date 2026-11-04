@@ -1,6 +1,6 @@
 # OS Lab 2 — System Calls
 
-Lab 2 starts from the completed [Lab 1 repository](https://github.com/EndlessMelody/os-lab1), commit `201dd84423049eab0c8661c62388c95b3b5710f8`. Its source code and commit history are preserved. The Lab 2 system calls are **not implemented yet**.
+Lab 2 starts from the completed [Lab 1 repository](https://github.com/EndlessMelody/os-lab1), commit `201dd84423049eab0c8661c62388c95b3b5710f8`. Its source code and commit history are preserved. On `lab2-trace`, Đăng Khoa's `trace()` implementation and self-tests are ready for Nhựt Duy's review; `sysinfo()` and `ptree()` await their owners' implementation. See [trace handoff and test output](docs/lab02/TRACE.md).
 
 - [Original assignment](Lab2_OS_System_Call.docx)
 - [Assignment text](docs/lab02/requirements.txt), extracted from the DOCX for easy reading
@@ -27,7 +27,7 @@ Exit QEMU with `Ctrl-a`, then `x`. Existing Lab 1 regression checks run with:
 make check-lab01
 ```
 
-`conf/lab.mk` intentionally retains `LAB=util` so the inherited programs keep their existing build settings, including two user stack pages. This setting selects MIT's scaffold; it is not the course lab number. The inherited Makefile's `LAB=syscall` mode expects MIT 2024's `attack`, `attacktest`, and `secret` programs, which are absent and outside this assignment. Do not switch modes without adapting those targets and reviewing the stack setting. `make grade` still selects the MIT utility grader; it does not assess Lab 2. Lab 2 tests remain to be written.
+`conf/lab.mk` intentionally retains `LAB=util` so the inherited programs keep their existing build settings, including two user stack pages. This setting selects MIT's scaffold; it is not the course lab number. The inherited Makefile's `LAB=syscall` mode expects MIT 2024's `attack`, `attacktest`, and `secret` programs, which are absent and outside this assignment. Do not switch modes without adapting those targets and reviewing the stack setting. `make grade` still selects the MIT utility grader; it does not assess Lab 2. Run `make check-trace` for trace self-tests; tests for the other two syscalls remain with their owners.
 
 ## Git workflow
 

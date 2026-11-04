@@ -1,0 +1,6 @@
+rm -rf *.dvi *.idx *.aux *.log *.ind *.ilg *.dSYM *.zip *.pcap \
+*/*.o */*.d */*.asm */*.sym \
+user/initcode user/initcode.out user/usys.S user/_* \
+kernel/kernel \
+mkfs/mkfs fs.img .gdbinit __pycache__ xv6.out* \
+ph barrier

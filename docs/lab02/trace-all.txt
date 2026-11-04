@@ -1,0 +1,17 @@
+*** Now run 'gdb' in another window.
+
+xv6 kernel is booting
+
+hart 2 starting
+hart 1 starting
+init: starting sh
+$ trace 2147483647 grep hello README
+3: syscall trace -> 0
+3: syscall exec -> 3
+3: syscall open -> 3
+3: syscall read -> 1023
+3: syscall read -> 971
+3: syscall read -> 409
+3: syscall read -> 0
+3: syscall close -> 0
+$ qemu-system-riscv64: terminating on signal 15 from pid 11054 (make)

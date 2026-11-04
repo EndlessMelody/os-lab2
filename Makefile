@@ -178,6 +178,9 @@ $U/_lab01check: tests/lab01check.o $(ULIB)
 $U/_dusizecheck: tests/dusizecheck.o $(ULIB)
 	$(LD) $(LDFLAGS) -T $U/user.ld -o $@ $^
 
+$U/_tracecheck: tests/tracecheck.o $(ULIB)
+	$(LD) $(LDFLAGS) -T $U/user.ld -o $@ $^
+
 mkfs/mkfs: mkfs/mkfs.c $K/fs.h $K/param.h
 	gcc $(XCFLAGS) -Werror -Wall -I. -o mkfs/mkfs mkfs/mkfs.c
 
@@ -210,6 +213,7 @@ UPROGS=\
 	$U/_wc\
 	$U/_zombie\
 	$U/_tree\
+	$U/_trace\
 	$U/_du
 
 
@@ -296,7 +300,7 @@ fs.img: mkfs/mkfs README $(UEXTRA) $(UPROGS)
 -include kernel/*.d user/*.d tests/*.d
 
 clean:
-	rm -rf *.tex *.dvi *.idx *.aux *.log *.ind *.ilg *.dSYM *.zip *.pcap \
+	rm -rf *.dvi *.idx *.aux *.log *.ind *.ilg *.dSYM *.zip *.pcap \
 	*/*.o */*.d */*.asm */*.sym \
 	$U/initcode $U/initcode.out $U/usys.S $U/_* \
 	$K/kernel \
@@ -367,6 +371,9 @@ check-lab01:
 	./grade-tv1
 	./grade-lab01
 
+check-trace:
+	./grade-lab02-trace
+
 ##
 ## FOR submissions
 ##
@@ -396,4 +403,4 @@ submit-check:
 zipball: clean submit-check
 	git archive --verbose --format zip --output lab.zip HEAD
 
-.PHONY: zipball clean grade check-lab01 submit-check
+.PHONY: zipball clean grade check-lab01 check-trace submit-check

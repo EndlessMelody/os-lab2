@@ -22,6 +22,16 @@ sys_getpid(void)
 }
 
 uint64
+sys_trace(void)
+{
+  int mask;
+
+  argint(0, &mask);
+  myproc()->tracemask = (uint)mask;
+  return 0;
+}
+
+uint64
 sys_fork(void)
 {
   return fork();

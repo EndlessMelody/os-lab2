@@ -1,0 +1,15 @@
+*** Now run 'gdb' in another window.
+
+xv6 kernel is booting
+
+hart 2 starting
+hart 1 starting
+init: starting sh
+$ tracecheck inherit
+INHERIT_PARENT 3 SIBLING 4
+3: syscall fork -> 5
+5: syscall getpid -> 5
+5: syscall fork -> 6
+6: syscall getpid -> 6
+TRACE_INHERIT_OK
+$ qemu-system-riscv64: terminating on signal 15 from pid 11192 (make)
