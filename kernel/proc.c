@@ -697,6 +697,7 @@ procdump(void)
     printf("\n");
   }
 }
+
 // Count all process slots that are currently in use.
 uint64
 getnproc(void)
@@ -722,7 +723,8 @@ ptree(uint64 addr, int max)
   struct ptreeinfo info;
   int count = 0;
 
-  if(addr == 0 || max <= 0)
+  if(addr == 0 || max <= 0 || addr >= current->sz ||
+     sizeof(info) > current->sz - addr)
     return -1;
 
   if(max > NPROC)
@@ -738,6 +740,8 @@ ptree(uint64 addr, int max)
       continue;
     }
 
+    // Clear padding and unused name bytes before exposing this ABI to users.
+    memset(&info, 0, sizeof(info));
     info.pid = p->pid;
     info.ppid = p->parent ? p->parent->pid : 0;
     info.state = p->state;
@@ -747,10 +751,9 @@ ptree(uint64 addr, int max)
     release(&p->lock);
     release(&wait_lock);
 
-    if(copyout(current->pagetable,
-               addr + count * sizeof(info),
-               (char *)&info,
-               sizeof(info)) < 0)
+    uint64 dst = addr + (uint64)count * sizeof(info);
+    if(dst >= current->sz || sizeof(info) > current->sz - dst ||
+       copyout(current->pagetable, dst, (char *)&info, sizeof(info)) < 0)
       return -1;
 
     count++;

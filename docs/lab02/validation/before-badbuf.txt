@@ -1,0 +1,10 @@
+*** Now run 'gdb' in another window.
+
+xv6 kernel is booting
+
+hart 2 starting
+hart 1 starting
+init: starting sh
+$ lab02check badbuf
+LAB02_FAIL: ptree rejects buffer at unaligned logical break
+$ qemu-system-riscv64: terminating on signal 15 from pid 5057 (make)

@@ -80,6 +80,7 @@ kalloc(void)
     memset((char*)r, 5, PGSIZE); // fill with junk
   return (void*)r;
 }
+
 // Return the number of free physical-memory bytes.
 uint64
 getfreemem(void)

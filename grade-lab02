@@ -1,0 +1,92 @@
+#!/usr/bin/env python3
+"""Integrated Lab 2 checks, executed in xv6 using the existing grader runtime."""
+
+import re
+import subprocess
+from pathlib import Path
+from gradelib import *
+
+r = Runner()
+evidence = Path('docs/lab02/validation')
+evidence.mkdir(parents=True, exist_ok=True)
+
+
+def boot(group, commands, helper=False, formatter=False):
+    extra = []
+    if helper:
+        subprocess.run(['make', '-s', 'user/_lab02check'], check=True)
+        extra = ['UEXTRA=user/xargstest.sh user/_lab02check']
+    if formatter:
+        subprocess.run(['make', '-s', 'user/_pstreeformat'], check=True)
+        extra = ['UEXTRA=user/xargstest.sh user/_pstreeformat']
+    maybe_unlink('fs.img')
+    r.run_qemu(save(str(evidence / ('qemu-' + group + '.txt'))),
+               shell_script(commands), make_args=extra, timeout=60)
+    r.match(no=['LAB02_FAIL:', 'panic:', r'usertrap\(', 'exec .* failed'])
+
+
+@test(10, 'Lab02 member sysinfotest')
+def test_sysinfotest():
+    boot('sysinfotest', ['sysinfotest'])
+    r.match('^sysinfotest: OK$', no=['FAIL:'])
+
+
+@test(10, 'Lab02 logical heap boundary')
+def test_badbuf():
+    boot('badbuf', ['lab02check badbuf'], helper=True)
+    r.match(r'^LAB02_BADBUF_OK: \d+ checks$')
+
+
+@test(10, 'Lab02 sysinfo memory and pointer boundaries')
+def test_sysinfo():
+    boot('sysinfo', ['lab02check sysinfo'], helper=True)
+    r.match(r'^LAB02_SYSINFO_OK: \d+ checks$')
+
+
+@test(10, 'Lab02 ptree records, padding, limits and pointer boundaries')
+def test_ptree():
+    boot('ptree', ['lab02check ptree'], helper=True)
+    r.match(r'^LAB02_PTREE_OK: \d+ checks$')
+
+
+@test(10, 'Lab02 parent-child relationships and zombie process counts')
+def test_relations():
+    boot('relations', ['lab02check relations'], helper=True)
+    r.match(r'^LAB02_RELATIONS_OK: \d+ checks$')
+
+
+@test(10, 'Lab02 concurrent snapshots with fork and exit')
+def test_concurrent():
+    boot('concurrent', ['lab02check concurrent'], helper=True)
+    r.match(r'^LAB02_CONCURRENT_OK: \d+ checks$')
+
+
+@test(10, 'Lab02 pstree renders the actual hierarchy')
+def test_pstree():
+    boot('pstree', ['pstree'])
+    rows = re.findall(r'^( *)(\d+) (\S+) state=(\d+) mem=(\d+)$', r.qemu.output, re.M)
+    assert_equal([(len(indent), name) for indent, _, name, _, _ in rows],
+                 [(0, 'init'), (2, 'sh'), (4, 'pstree')])
+    assert_equal(all(int(size) > 0 and 1 <= int(state) <= 5
+                     for _, _, _, state, size in rows), True)
+
+
+@test(10, 'Lab02 trace recognizes both new syscalls')
+def test_combined():
+    boot('combined', ['trace 25165824 lab02check snapshots'], helper=True)
+    r.match('^LAB02_SNAPSHOTS_OK$')
+    events = re.findall(r'(\d+): syscall (\w+) -> (-?\d+)', r.qemu.output)
+    assert_equal([name for _, name, _ in events], ['sysinfo', 'ptree'])
+    assert_equal(int(events[0][2]), 0)
+    assert_equal(int(events[1][2]) >= 3, True)
+    assert_equal(events[0][0], events[1][0])
+
+
+@test(10, 'Lab02 pstree preserves full uint64 memory sizes')
+def test_format():
+    boot('format', ['pstreeformat'], formatter=True)
+    r.match('^1 wide state=3 mem=18446744073709551615$',
+            '^  2 child state=4 mem=4294967296$', '^LAB02_FORMAT_OK$')
+
+
+run_tests()

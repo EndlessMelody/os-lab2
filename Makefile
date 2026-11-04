@@ -181,6 +181,12 @@ $U/_dusizecheck: tests/dusizecheck.o $(ULIB)
 $U/_tracecheck: tests/tracecheck.o $(ULIB)
 	$(LD) $(LDFLAGS) -T $U/user.ld -o $@ $^
 
+$U/_lab02check: tests/lab02check.o $(ULIB)
+	$(LD) $(LDFLAGS) -T $U/user.ld -o $@ $^
+
+$U/_pstreeformat: tests/pstreeformat.o $(ULIB)
+	$(LD) $(LDFLAGS) -T $U/user.ld -o $@ $^
+
 mkfs/mkfs: mkfs/mkfs.c $K/fs.h $K/param.h
 	gcc $(XCFLAGS) -Werror -Wall -I. -o mkfs/mkfs mkfs/mkfs.c
 
@@ -376,6 +382,9 @@ check-lab01:
 check-trace:
 	./grade-lab02-trace
 
+check-lab02:
+	./grade-lab02
+
 ##
 ## FOR submissions
 ##
@@ -405,4 +414,4 @@ submit-check:
 zipball: clean submit-check
 	git archive --verbose --format zip --output lab.zip HEAD
 
-.PHONY: zipball clean grade check-lab01 check-trace submit-check
+.PHONY: zipball clean grade check-lab01 check-trace check-lab02 submit-check

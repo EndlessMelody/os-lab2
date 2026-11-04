@@ -1,6 +1,4 @@
-
 #include "kernel/types.h"
-#include "kernel/stat.h"
 #include "kernel/param.h"
 #include "kernel/ptree.h"
 #include "user/user.h"
@@ -8,6 +6,19 @@
 struct ptreeinfo processes[NPROC];
 int printed[NPROC];
 int n;
+
+// The inherited user printf narrows %lu to 32 bits. Preserve the ABI's uint64.
+static void
+printmem(uint64 bytes)
+{
+  char digits[20];
+  int i = sizeof(digits);
+  do {
+    digits[--i] = '0' + bytes % 10;
+    bytes /= 10;
+  } while(bytes);
+  write(1, digits + i, sizeof(digits) - i);
+}
 
 void
 printtree(int index, int level)
@@ -22,11 +33,12 @@ printtree(int index, int level)
   for(i = 0; i < level; i++)
     printf("  ");
 
-  printf("%d %s state=%d mem=%d\n",
+  printf("%d %s state=%d mem=",
          processes[index].pid,
          processes[index].name,
-         processes[index].state,
-         (int)processes[index].memsize);
+         processes[index].state);
+  printmem(processes[index].memsize);
+  printf("\n");
 
   for(i = 0; i < n; i++){
     if(!printed[i] &&
