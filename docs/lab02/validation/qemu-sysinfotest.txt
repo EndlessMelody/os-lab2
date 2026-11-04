@@ -1,0 +1,15 @@
+*** Now run 'gdb' in another window.
+
+xv6 kernel is booting
+
+hart 2 starting
+hart 1 starting
+init: starting sh
+$ sysinfotest
+sysinfotest: start
+PASS: basic information
+PASS: memory allocation and release
+PASS: process creation and cleanup
+PASS: invalid addresses
+sysinfotest: OK
+$ qemu-system-riscv64: terminating on signal 15 from pid 8569 (make)

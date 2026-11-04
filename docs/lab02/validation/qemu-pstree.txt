@@ -1,0 +1,12 @@
+*** Now run 'gdb' in another window.
+
+xv6 kernel is booting
+
+hart 2 starting
+hart 1 starting
+init: starting sh
+$ pstree
+1 init state=2 mem=20480
+  2 sh state=2 mem=24576
+    3 pstree state=4 mem=20480
+$ qemu-system-riscv64: terminating on signal 15 from pid 8844 (make)

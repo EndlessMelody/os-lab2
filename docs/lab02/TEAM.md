@@ -1,6 +1,6 @@
 # Lab 2 — Quy ước bàn giao
 
-Phân công gốc: [Lab2_PhanCong_SystemCalls.html](../../Lab2_PhanCong_SystemCalls.html). Đợt này thực hiện code, self-test, review chéo và tích hợp; báo cáo, đóng gói và nộp MOODLE thực hiện sau.
+Phân công gốc: [Lab2_PhanCong_SystemCalls.html](../../Lab2_PhanCong_SystemCalls.html). Cập nhật theo yêu cầu ngày 04/11/2026: đã nhận đủ ba nhánh, rà soát kỹ thuật, tích hợp và chuẩn bị báo cáo Lab 2 theo mẫu Lab 1. Hồ sơ cuối nằm trong [REVIEW.md](REVIEW.md), [REPORT.md](REPORT.md) và `validation/`. Chưa thực hiện nộp MOODLE.
 
 | Thành viên | Nhánh | Phần phụ trách | Người review |
 |---|---|---|---|

@@ -1,0 +1,10 @@
+*** Now run 'gdb' in another window.
+
+xv6 kernel is booting
+
+hart 2 starting
+hart 1 starting
+init: starting sh
+$ lab02check badbuf
+LAB02_BADBUF_OK: 5 checks
+$ qemu-system-riscv64: terminating on signal 15 from pid 8626 (make)

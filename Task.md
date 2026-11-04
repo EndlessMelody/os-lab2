@@ -1,6 +1,6 @@
 # Lab 2 — System Call
 
-Source of requirements: [Lab2_OS_System_Call.docx](Lab2_OS_System_Call.docx). On `lab2-trace`, trace implementation and self-tests are complete; independent review and integration remain pending. See [trace handoff](docs/lab02/TRACE.md). The previous Lab 1 plan is preserved in [docs/lab01/Task.md](docs/lab01/Task.md).
+Source of requirements: [Lab2_OS_System_Call.docx](Lab2_OS_System_Call.docx). All three member branches have been received, technically reviewed and integrated. See [integration review](docs/lab02/REVIEW.md) and [report](docs/lab02/REPORT.md). The previous Lab 1 plan is preserved in [docs/lab01/Task.md](docs/lab01/Task.md).
 
 ## 1. Trace
 
@@ -14,32 +14,32 @@ Source of requirements: [Lab2_OS_System_Call.docx](Lab2_OS_System_Call.docx). On
 
 ## 2. Sysinfo
 
-- [ ] Define shared `struct sysinfo` with `freemem` (free bytes) and `nproc` (processes whose state is not `UNUSED`).
-- [ ] Add `int sysinfo(struct sysinfo *)`, its syscall number, stub, and kernel dispatch.
-- [ ] Count the allocator's free pages and active processes using the appropriate locks.
-- [ ] Copy the result into user memory with `copyout`; report invalid pointers as errors.
-- [ ] Write `user/sysinfotest.c`, add `$U/_sysinfotest` to `UPROGS`, and require `sysinfotest: OK` on success.
-- [ ] Test memory allocation/free, process creation/exit, and invalid user addresses.
+- [x] Define shared `struct sysinfo` with `freemem` (free bytes) and `nproc` (processes whose state is not `UNUSED`).
+- [x] Add `int sysinfo(struct sysinfo *)`, its syscall number, stub, and kernel dispatch.
+- [x] Count the allocator's free pages and active processes using the appropriate locks.
+- [x] Copy the result into user memory with `copyout`; report invalid pointers as errors.
+- [x] Write `user/sysinfotest.c`, add `$U/_sysinfotest` to `UPROGS`, and require `sysinfotest: OK` on success.
+- [x] Test memory allocation/free, process creation/exit, and invalid user addresses.
 
 ## 3. Process tree
 
-- [ ] Define shared `struct ptreeinfo` with `pid`, `ppid`, `state`, `uint64 memsize`, and `char name[16]`.
-- [ ] Add `int ptree(struct ptreeinfo *buf, int max)`, its syscall number, stub, and dispatch.
-- [ ] Collect up to `max` non-`UNUSED` processes in the kernel, respecting process and parent-pointer locking.
-- [ ] Return the number of entries copied, or `-1` on invalid arguments or copy errors.
-- [ ] Handle `max <= 0`, invalid buffers, and more processes than available entries without overflowing the user buffer.
-- [ ] Write `user/pstree.c`, add `$U/_pstree` to `UPROGS`, and construct the indented parent/child display in user space.
-- [ ] Display PID, name, state, and user-memory size; test multiple generations and a truncated snapshot.
+- [x] Define shared `struct ptreeinfo` with `pid`, `ppid`, `state`, `uint64 memsize`, and `char name[16]`.
+- [x] Add `int ptree(struct ptreeinfo *buf, int max)`, its syscall number, stub, and dispatch.
+- [x] Collect up to `max` non-`UNUSED` processes in the kernel, respecting process and parent-pointer locking.
+- [x] Return the number of entries copied, or `-1` on invalid arguments or copy errors.
+- [x] Handle `max <= 0`, invalid buffers, and more processes than available entries without overflowing the user buffer.
+- [x] Write `user/pstree.c`, add `$U/_pstree` to `UPROGS`, and construct the indented parent/child display in user space.
+- [x] Display PID, name, state, and user-memory size; test multiple generations and a truncated snapshot.
 
 ## 4. Integration and hand-in
 
-Theo phân công hiện tại, triển khai, self-test, review chéo và tích hợp thuộc đợt này. Các mục báo cáo, đóng gói và nộp MOODLE bên dưới được giữ để làm ở giai đoạn sau.
+Theo yêu cầu ngày 04/11/2026, đã rà soát kỹ thuật, tích hợp ba nhánh và chuẩn bị báo cáo. Không xác nhận thay các thành viên rằng review chéo cá nhân đã có biên bản. Đóng gói và nộp MOODLE chưa được thực hiện trong yêu cầu này.
 
 - [x] Coordinate distinct syscall numbers and shared-file edits across the three features; see `docs/lab02/TEAM.md`.
-- [ ] Build from clean source and verify all three features together in QEMU.
+- [x] Build from clean source and verify all three features together in QEMU.
 - [x] Re-run `make check-lab01` on `lab2-trace` to check inherited utilities; repeat on the final three-feature integration.
-- [ ] Record reproducible test commands, actual results, limitations, and each member's contribution.
-- [ ] Write a concise PDF report named `StudentID1_StudentID2_StudentID3_Report.pdf`.
+- [x] Record reproducible test commands, actual results, limitations, and each member's contribution.
+- [x] Write a concise PDF report named `StudentID1_StudentID2_StudentID3_Report.pdf`.
 - [ ] Generate a patch from the agreed baseline, including all newly committed source files, and verify it applies to that baseline.
 - [ ] Run `make clean`, create the xv6 source ZIP, and verify the final archive contains the PDF, `Realease/` patch, and `Source/` ZIP.
 - [ ] Sort student IDs ascending in the final ZIP name and submit through MOODLE.

@@ -1,0 +1,14 @@
+./grade-lab02
+make[1]: Entering directory '/tmp/lab02-verify-fe64xvm4'
+make[1]: 'kernel/kernel' is up to date.
+make[1]: Leaving directory '/tmp/lab02-verify-fe64xvm4'
+== Test Lab02 member sysinfotest == Lab02 member sysinfotest: OK (1.1s)
+== Test Lab02 logical heap boundary == Lab02 logical heap boundary: OK (0.9s)
+== Test Lab02 sysinfo memory and pointer boundaries == Lab02 sysinfo memory and pointer boundaries: OK (1.1s)
+== Test Lab02 ptree records, padding, limits and pointer boundaries == Lab02 ptree records, padding, limits and pointer boundaries: OK (0.9s)
+== Test Lab02 parent-child relationships and zombie process counts == Lab02 parent-child relationships and zombie process counts: OK (1.1s)
+== Test Lab02 concurrent snapshots with fork and exit == Lab02 concurrent snapshots with fork and exit: OK (2.2s)
+== Test Lab02 pstree renders the actual hierarchy == Lab02 pstree renders the actual hierarchy: OK (0.7s)
+== Test Lab02 trace recognizes both new syscalls == Lab02 trace recognizes both new syscalls: OK (0.9s)
+== Test Lab02 pstree preserves full uint64 memory sizes == Lab02 pstree preserves full uint64 memory sizes: OK (1.1s)
+Score: 90/90

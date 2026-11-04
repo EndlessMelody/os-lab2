@@ -1,0 +1,37 @@
+{
+  "verified_commit": "626c6e0e4c2bf96654adefb7890918a61cd70bd0",
+  "figures": [
+    {
+      "name": "combined",
+      "source": "docs/lab02/validation/qemu-combined.txt",
+      "source_sha256": "082e54b0ec47877e6b2717fb9424b074da81ad9cf4b17d1d08b82dd5062c8c0b",
+      "selected_line_numbers": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "excerpt_sha256": "92f8dc3fb9f891a1bc7bc42a7ec6d0453bceaca0285b44f4f2f6810dcb44b9d0",
+      "pdf_sha256": "4bdd75323c31c0a9c210651a4bafa3a8552f93a94db0846d15f84b92394357f1",
+      "font_size_pt": 11
+    },
+    {
+      "name": "pstree",
+      "source": "docs/lab02/validation/qemu-pstree.txt",
+      "source_sha256": "d4589fee468c0660781e3db33410cda3d86b4e00e1bb51aac640d1a4cd81f442",
+      "selected_line_numbers": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "excerpt_sha256": "dc1b164e655fa99ebae1f952afac5147db16e20345d175d1358f5b247d9c6fdc",
+      "pdf_sha256": "9a8fba26537b82e801371706a0403706cb647e1d42b4c16c1bed95984bc2be75",
+      "font_size_pt": 11
+    }
+  ],
+  "architecture": {
+    "kind": "design schematic",
+    "pdf_sha256": "674246e82f19137418bbde4329e6d7216584621f26316404169fe787dc4c91d8"
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "commit": "626c6e0e4c2bf96654adefb7890918a61cd70bd0",
+  "date": "2026-11-04T10:59:20.796446+07:00",
+  "environment": {
+    "host": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "python": "3.12.3",
+    "qemu_cpus": 3,
+    "qemu_memory_mib": 128,
+    "gcc": "riscv64-linux-gnu-gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+    "qemu": "QEMU emulator version 8.2.2 (Debian 1:8.2.2+ds-0ubuntu1.18)",
+    "gdb": "GNU gdb (Ubuntu 15.1-1ubuntu1~24.04.1) 15.1"
+  },
+  "reviewed_branches": {
+    "lab2-trace": "0d06ca9a3885f485ccd17bb18031373cd506efcb",
+    "lab2-sysinfo": "05da92d9345e095dd095e82dbc6eb1895294ce32",
+    "lab2-ptree": "c0a4bb7e5f2128ed0d6334286fc016e2b02e4a8a"
+  },
+  "runs": [
+    {
+      "command": [
+        "make",
+        "clean"
+      ],
+      "log": "clean.txt",
+      "returncode": 0,
+      "elapsed_seconds": 0.08
+    },
+    {
+      "command": [
+        "make",
+        "-j4",
+        "kernel/kernel",
+        "fs.img"
+      ],
+      "log": "build.txt",
+      "returncode": 0,
+      "elapsed_seconds": 1.51
+    },
+    {
+      "command": [
+        "make",
+        "check-trace"
+      ],
+      "log": "trace-tests.txt",
+      "returncode": 0,
+      "elapsed_seconds": 23.4
+    },
+    {
+      "command": [
+        "make",
+        "check-lab02"
+      ],
+      "log": "integration-tests.txt",
+      "returncode": 0,
+      "elapsed_seconds": 10.24
+    },
+    {
+      "command": [
+        "make",
+        "check-lab01"
+      ],
+      "log": "lab01-tests.txt",
+      "returncode": 0,
+      "elapsed_seconds": 54.75
+    },
+    {
+      "command": [
+        "./grade-lab02-kernel"
+      ],
+      "log": "kernel-tests.txt",
+      "returncode": 0,
+      "elapsed_seconds": 83.18
+    }
+  ],
+  "evidence_sha256": {
+    "before-badbuf.txt": "72387de24e2c41539eac3b0bf054c69ffe61b5ec03de48c6d9e4e6625be38164",
+    "before-ptree.txt": "83e00d0f22ee3d5461303779bda4fd37ed2a7b7be7794366874c9e5fa09ce952",
+    "before-tests.txt": "c03735d4fae3d25a08f69899628210c16bcfe2fa5d8e9671d2eeeb4ce3604dca",
+    "build.txt": "8a617590984a221de5b1e032bdad4dd392b81e9f57172b71f0cf50b543041f48",
+    "clean.txt": "0d2214c6ece7e8a15131edc65cea5b6fd1238f852875531b51699f6d51c15265",
+    "integration-tests.txt": "701b46542a2146c16d274a48c350d62012cc2c22c61296802152593da0ac77c0",
+    "kernel-tests.txt": "37c916a22bd9edd08482508020a5bd78adef0c089a68a4e418bf72cb3142338b",
+    "lab01-tests.txt": "06e32c5472843ec1e6176511bc9e113ac96b5544d9263be867711fdd9beb0207",
+    "qemu-badbuf.txt": "dd435d169c98ece38a46aec0ca819ff46a892ca459b67750bf76a3977dd2c89d",
+    "qemu-combined.txt": "082e54b0ec47877e6b2717fb9424b074da81ad9cf4b17d1d08b82dd5062c8c0b",
+    "qemu-concurrent.txt": "93e12df81ced3eba08afc4af1d4747825e59cf85170d6e780a323cfd2f25db9d",
+    "qemu-format.txt": "20eaf288826cc9cd497a4215f7a7950a9076a42075bcef1856bfc579994c705e",
+    "qemu-pstree.txt": "d4589fee468c0660781e3db33410cda3d86b4e00e1bb51aac640d1a4cd81f442",
+    "qemu-ptree.txt": "682dd8c9be1d0cc9d689b356612232b917310cc8d6e0b1e7cc3f4127e44e8f20",
+    "qemu-relations.txt": "7f0daf9f6ee10474e37bc93052d1e8a7c559105bba11bc8611873059e95dae9e",
+    "qemu-sysinfo.txt": "1084b5ca69f6980b3321404597eef4bd930053c1d0eb21c2fa797ae4f8f9660e",
+    "qemu-sysinfotest.txt": "a7d00543130847a9ada7b1210ea5b0f6a5d2a2d4448d7466b42ddb8143a1f480",
+    "qemu-usertests.txt": "20afd80db1d9a2ea6eabd671e14fd902fa6d6284b5fe18c202855222178773a3",
+    "trace-all.txt": "4af0b9a271436da36192d23b806dd880b29565920de10e76ea242b41c6044239",
+    "trace-cli.txt": "81b7f841d6e5dda9cd137c0784bed46cbe6e6e2e944feda6c8b2491461fc8baa",
+    "trace-forkforkfork.txt": "7a2c680a99fe9bb1c72caaa4d4672d359f45fbf59da70196981313d206b19e53",
+    "trace-inherit.txt": "6004c43a855ac3c5ae28030a8923d46af6f23985cff9b0a46ebc7cd7b3b3a1b4",
+    "trace-masks.txt": "437e423aaaea639525978f5343801c748adb3e513e63fa2f42d4397a1a6f9959",
+    "trace-plain.txt": "c4eb9b9bff85d8ab20ce59a544c1a42f6afa9fe4a292eed7520bedc42b421734",
+    "trace-read.txt": "17a44359cdcfb6c28bbad1664ee0c648ad329c6f8071a0db4761052c6879d6a6",
+    "trace-tests.txt": "b4c47c8523b0ff3837c13cc90b54b85f98d7c3d1f77fdb192bc6f1bea5557076"
+  }
+}

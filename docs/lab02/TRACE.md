@@ -1,5 +1,7 @@
 # Bàn giao trace — Đăng Khoa
 
+**Tài liệu lịch sử giai đoạn 30/10/2026.** Những ghi chú chờ bàn giao/review bên dưới mô tả thời điểm đó. Cả ba nhánh đã được nhận và tích hợp theo yêu cầu ngày 04/11; xem trạng thái hiện tại trong [REVIEW.md](REVIEW.md) và [README](../../README.md).
+
 Nhánh: `lab2-trace`. Baseline chung của ba thành viên: `fcbb90ef2217f0805447337e021a34e70e6320e0`. Hoàn thành implementation và self-test 5/5 theo bản phân công. Nhựt Duy chưa thực hiện review; chưa merge phần trace vào `main`.
 
 ## Cách chạy

@@ -1,0 +1,40 @@
+PASS: concise report with 10 pages
+PASS: cover preserves confirmed academic and student information
+PASS: university logo is embedded on the cover
+PASS: PDF metadata contains the correct author name
+PASS: report covers all syscalls and evaluation questions
+PASS: report includes primary references
+PASS: no drafting placeholders, replacement glyphs or unresolved references
+PASS: academic Termes font is embedded
+PASS: all PDF fonts are embedded
+PASS: page 1 is A4
+PASS: page 2 is A4
+PASS: page 3 is A4
+PASS: page 4 is A4
+PASS: page 5 is A4
+PASS: page 6 is A4
+PASS: page 7 is A4
+PASS: page 8 is A4
+PASS: page 9 is A4
+PASS: page 10 is A4
+PASS: text, tables and figures stay within page bounds
+PASS: final PDF build has no overflow, missing glyph or reference/version warnings
+PASS: isolated clean, build and all four test commands succeeded
+PASS: verification logs match the immutable run hashes
+PASS: trace-tests.txt matches the reported test groups and scores
+PASS: integration-tests.txt matches the reported test groups and scores
+PASS: lab01-tests.txt matches the reported test groups and scores
+PASS: xv6 quick kernel regression passed
+PASS: claimed pre-fix failures are preserved
+PASS: lab2-trace handoff is preserved in the integrated history
+PASS: lab2-sysinfo handoff is preserved in the integrated history
+PASS: lab2-ptree handoff is preserved in the integrated history
+PASS: current code matches the exact source tested for the report
+PASS: report identifies the verified code commit
+PASS: figures identify the same verified commit
+PASS: architecture schematic matches its manifest
+PASS: combined figure is traceable to actual QEMU log lines
+PASS: combined excerpt is selectable in the report
+PASS: pstree figure is traceable to actual QEMU log lines
+PASS: pstree excerpt is selectable in the report
+PASS: student-ID report copy matches the canonical PDF

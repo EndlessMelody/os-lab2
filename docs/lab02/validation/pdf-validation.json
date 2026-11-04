@@ -1,0 +1,170 @@
+{
+  "pdf": "OS2Lab_Report.pdf",
+  "pages": 10,
+  "source_sha256": "a7ae86432f8d44e8b39809673d226e824bc31d2d831e160cb1685c76ff9d77c6",
+  "pdf_sha256": "00d8743a9042d8a0e0c62f51a1150dab5558c99c51fada886a0ac21b55681434",
+  "verified_code_commit": "626c6e0e4c2bf96654adefb7890918a61cd70bd0",
+  "checks": [
+    {
+      "passed": true,
+      "description": "concise report with 10 pages"
+    },
+    {
+      "passed": true,
+      "description": "cover preserves confirmed academic and student information"
+    },
+    {
+      "passed": true,
+      "description": "university logo is embedded on the cover"
+    },
+    {
+      "passed": true,
+      "description": "PDF metadata contains the correct author name"
+    },
+    {
+      "passed": true,
+      "description": "report covers all syscalls and evaluation questions"
+    },
+    {
+      "passed": true,
+      "description": "report includes primary references"
+    },
+    {
+      "passed": true,
+      "description": "no drafting placeholders, replacement glyphs or unresolved references"
+    },
+    {
+      "passed": true,
+      "description": "academic Termes font is embedded"
+    },
+    {
+      "passed": true,
+      "description": "all PDF fonts are embedded"
+    },
+    {
+      "passed": true,
+      "description": "page 1 is A4"
+    },
+    {
+      "passed": true,
+      "description": "page 2 is A4"
+    },
+    {
+      "passed": true,
+      "description": "page 3 is A4"
+    },
+    {
+      "passed": true,
+      "description": "page 4 is A4"
+    },
+    {
+      "passed": true,
+      "description": "page 5 is A4"
+    },
+    {
+      "passed": true,
+      "description": "page 6 is A4"
+    },
+    {
+      "passed": true,
+      "description": "page 7 is A4"
+    },
+    {
+      "passed": true,
+      "description": "page 8 is A4"
+    },
+    {
+      "passed": true,
+      "description": "page 9 is A4"
+    },
+    {
+      "passed": true,
+      "description": "page 10 is A4"
+    },
+    {
+      "passed": true,
+      "description": "text, tables and figures stay within page bounds"
+    },
+    {
+      "passed": true,
+      "description": "final PDF build has no overflow, missing glyph or reference/version warnings"
+    },
+    {
+      "passed": true,
+      "description": "isolated clean, build and all four test commands succeeded"
+    },
+    {
+      "passed": true,
+      "description": "verification logs match the immutable run hashes"
+    },
+    {
+      "passed": true,
+      "description": "trace-tests.txt matches the reported test groups and scores"
+    },
+    {
+      "passed": true,
+      "description": "integration-tests.txt matches the reported test groups and scores"
+    },
+    {
+      "passed": true,
+      "description": "lab01-tests.txt matches the reported test groups and scores"
+    },
+    {
+      "passed": true,
+      "description": "xv6 quick kernel regression passed"
+    },
+    {
+      "passed": true,
+      "description": "claimed pre-fix failures are preserved"
+    },
+    {
+      "passed": true,
+      "description": "lab2-trace handoff is preserved in the integrated history"
+    },
+    {
+      "passed": true,
+      "description": "lab2-sysinfo handoff is preserved in the integrated history"
+    },
+    {
+      "passed": true,
+      "description": "lab2-ptree handoff is preserved in the integrated history"
+    },
+    {
+      "passed": true,
+      "description": "current code matches the exact source tested for the report"
+    },
+    {
+      "passed": true,
+      "description": "report identifies the verified code commit"
+    },
+    {
+      "passed": true,
+      "description": "figures identify the same verified commit"
+    },
+    {
+      "passed": true,
+      "description": "architecture schematic matches its manifest"
+    },
+    {
+      "passed": true,
+      "description": "combined figure is traceable to actual QEMU log lines"
+    },
+    {
+      "passed": true,
+      "description": "combined excerpt is selectable in the report"
+    },
+    {
+      "passed": true,
+      "description": "pstree figure is traceable to actual QEMU log lines"
+    },
+    {
+      "passed": true,
+      "description": "pstree excerpt is selectable in the report"
+    },
+    {
+      "passed": true,
+      "description": "student-ID report copy matches the canonical PDF"
+    }
+  ],
+  "overflow": []
+}

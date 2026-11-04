@@ -1,0 +1,12 @@
+*** Now run 'gdb' in another window.
+
+xv6 kernel is booting
+
+hart 2 starting
+hart 1 starting
+init: starting sh
+$ pstreeformat
+1 wide state=3 mem=18446744073709551615
+  2 child state=4 mem=4294967296
+LAB02_FORMAT_OK
+$ qemu-system-riscv64: terminating on signal 15 from pid 8947 (make)

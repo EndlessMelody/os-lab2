@@ -1,0 +1,4 @@
+$ trace 25165824 lab02check snapshots
+3: syscall sysinfo -> 0
+3: syscall ptree -> 3
+LAB02_SNAPSHOTS_OK

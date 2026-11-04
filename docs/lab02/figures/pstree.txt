@@ -1,0 +1,4 @@
+$ pstree
+1 init state=2 mem=20480
+  2 sh state=2 mem=24576
+    3 pstree state=4 mem=20480
