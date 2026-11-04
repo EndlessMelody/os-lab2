@@ -215,7 +215,8 @@ UPROGS=\
 	$U/_zombie\
 	$U/_tree\
 	$U/_trace\
-	$U/_du
+	$U/_du\
+	$U/_pstree
 
 
 

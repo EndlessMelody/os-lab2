@@ -1,4 +1,5 @@
 struct stat;
+struct ptreeinfo;
 struct sysinfo;
 int sysinfo(struct sysinfo *);
 // system calls
@@ -24,6 +25,7 @@ char* sbrk(int);
 int sleep(int);
 int uptime(void);
 int trace(int);
+int ptree(struct ptreeinfo *, int);
 
 // ulib.c
 int stat(const char*, struct stat*);
